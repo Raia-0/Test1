@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+
+/* :root {
+  --background: #000000;
+  --foreground: #ffffff;
+} */
+
+/* @theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+} */
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff;
+    --foreground: #000000;
+  }
+} */
+
+body {
+  overflow-x: hidden; /* Nunca terá rolagem horizontal */
+}
+
+@media (max-width: 1024px) { /* Se a tela for menor que lg */
+  body {
+    overflow-y: auto; /* Permite rolagem para baixo */
+  }
+}
+
+@media (min-width: 1024px) { /* Se a tela for lg ou maior */
+  body {
+    overflow-y: auto; /* Bloqueia rolagem */
+  }
+}
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: local('Montserrat'), url(../fonts/Montserrat-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'MontserratSemiBold';
+  src: local('MontserratSemiBold'), url(../fonts/Montserrat-SemiBold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Abhaya';
+  src: local('Abhaya'), url(../fonts/AbhayaLibre-Medium.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'MontserratMedium';
+  src: local('MontserratMedium'), url(../fonts/Montserrat-Medium.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'MontserratBold';
+  src: local('MontserratBold'), url(../fonts/Montserrat-Bold.ttf) format('truetype');
+}
