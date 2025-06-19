@@ -22,8 +22,8 @@ export default function novasenha() {
                 {/* O Body é o conteúdo principal da página, onde a maior parte das informações interativas e de layout são exibidas */}
                 <div className="shadow-[inset_0_-4px_0_0_#222222] flex flex-col lg:flex-row justify-center items-center lg:items-start gap-70 w-full px-10 mt-5 flex-grow overflow-y-auto">
                     
-                    {/* Seção da esquerda */}
-                    {/* Aqui, temos o logo e a descrição sobre o projeto */}
+                    Seção da esquerda
+                    Aqui, temos o logo e a descrição sobre o projeto
                     <div className="flex flex-col space-y-6 max-w-md">
                         <div>
                             <img className="pt-10 pl-10 scale-150" src={LogoIni.src} alt="Logo" />

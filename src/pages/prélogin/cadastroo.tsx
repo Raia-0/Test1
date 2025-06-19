@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import Menulogin from "@/components/menulogin";
 import Footer from "@/components/footer";
 import LogoIni from "@/assets/Logo.png";
-import "../services/firebase";
+import "../../services/firebase";
 import { Link } from "react-router-dom";
 
 export default function CadastroSimples() {
@@ -47,13 +47,13 @@ export default function CadastroSimples() {
                 <div className="shadow-[inset_0_-4px_0_0_#222222] gap-10 flex flex-col lg:flex-row justify-center items-center lg:items-start lg:gap-70 w-full flex-grow p-6">
                     
                     {/* Lado Esquerdo */}
-                    <div className="lg:flex lg:flex-col items-center lg:items-start space-y-6 max-w-md text-center lg:text-left">
+                    {/* <div className="lg:flex lg:flex-col items-center lg:items-start space-y-6 max-w-md text-center lg:text-left">
                         <img className="lg:pt-6 lg:max-w-[100%]" src={LogoIni.src} alt="Logo" />
                         <p className="w-full text-lg lg:text-2xl font-['Montserrat'] text-[#222222]">
                             Ao ingressar no projeto avicontrol você irá ter uma melhor visão sobre a sua granja,
                             gerar relatórios, ver dashboards e realizar os cálculos avícolas.
                         </p>
-                    </div>
+                    </div> */}
 
                     {/* Formulário */}
                     <div className="bg-white border border-black p-6 w-full max-w-[28rem] rounded-lg shadow-lg mt-10 mb-10 lg:mt-10">

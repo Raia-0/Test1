@@ -5,7 +5,7 @@ import Primarybutton from "./buttons/primarybutton";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import Logo from "@/assets/Laranjapreto.png";
 import Secondbutton from "@/components/buttons/secondbutton";
-import Logoo from "@/assets/Logo_Barra.png";
+import Logoo from "@/assets/Group 1412.png";
 import Linha from "@/assets/Line.png";
 import { Button } from "@mui/material";
 import { useState } from "react";

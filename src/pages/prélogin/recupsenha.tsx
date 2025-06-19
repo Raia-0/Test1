@@ -5,7 +5,7 @@ import LogoIni from "@/assets/Logo.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import "../services/firebase";
+import "../../services/firebase";
 
 export default function recupsenha() {
     const [email, setEmail] = useState("");
@@ -40,10 +40,10 @@ export default function recupsenha() {
                 <div className="shadow-[inset_0_-4px_0_0_#222222] gap-10 flex flex-col lg:flex-row justify-center items-center lg:items-start lg:gap-70 w-full flex-grow overflow-y-auto">
                     {/* Esquerda */}
                     <div className="lg:flex lg:flex-col items-center lg:items-start space-y-6 max-w-md text-center lg:text-left">
-                        <div>
+                        {/* <div>
                             <img className="lg:pt-6 lg:max-w-[100%]" src={LogoIni.src} alt="Logo" />
-                        </div>
-                        <div className="w-full text-lg lg:text-2xl font-['Montserrat'] text-[#222222]">
+                        </div> */}
+                        <div className="w-full text-lg lg:text-2xl font-['Montserrat'] mt-50 text-[#222222]">
                             <p>
                                 Esqueceu sua senha? Sem problemas! Informe seu e-mail cadastrado e enviaremos um link para redefinição.
                             </p>
@@ -51,7 +51,7 @@ export default function recupsenha() {
                     </div>
 
                     {/* Direita */}
-                    <div className="bg-white border border-black p-6 w-full max-w-[28rem] rounded-lg shadow-lg mt-10 mb-10 lg:mt-10">
+                    <div className="bg-white border border-black p-6 w-full max-w-[28rem] rounded-lg shadow-lg mt-10 mb-10 lg:mt-50">
                         <h2 className="text-2xl font-bold mb-6 text-center">Recuperar Senha</h2>
                         {success ? (
                             <div className="flex flex-col items-center gap-4">

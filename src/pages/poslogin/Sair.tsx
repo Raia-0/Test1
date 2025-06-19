@@ -4,7 +4,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { Link } from "react-router-dom";
 import { auth } from "@/services/firebase";
 import Quartobutton from "@/components/buttons/quartobutton";
-import Menusair from "@/components/menusair";
+import Barraleteral from "@/components/barralateral";
 
 export default function Sair() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -18,8 +18,9 @@ export default function Sair() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#FFF7E3] flex flex-col overflow-hidden">
-      <Menusair />
+    <div className="flex flex-row w-full min-h-screen bg-[#FFF7E3] flex flex-col overflow-hidden">
+      <div><Barraleteral/></div>
+      
 
       <div className="flex flex-grow justify-center items-center">
         <div className="bg-white w-[90%] max-w-md p-8 rounded-lg shadow-lg text-center">

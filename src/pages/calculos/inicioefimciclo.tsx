@@ -5,9 +5,10 @@ import { FiMenu, FiX, FiHome, FiSettings, FiUser, FiAlertCircle } from "react-ic
 import Quartobutton from "@/components/buttons/quartobutton";
 import Menuinserdados from "@/components/menuinserdados";
 import html2pdf from "html2pdf.js";
-import { db } from '../services/firebase';
+import { db } from '../../services/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { useState, ChangeEvent, FormEvent } from 'react';
+import Barra from "@/components/barralateral";
 
 interface FormData {
   avesInicio: string;
@@ -614,80 +615,19 @@ export default function Inserirdados() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#FFF7E3] flex flex-col overflow-x-hidden">
-      <header className="sticky top-0 z-50 w-full">
-        <Menuinserdados />
-      </header>
+    <div className=" w-full min-h-screen bg-[#FFF7E3] flex flex-row overflow-x-hidden">
+      
+      <div>
+         <Barra />
+      </div>
 
       <main className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         <div className="bg-[#FFF7E3] p-4 lg:w-1/4 overflow-y-auto lg:overflow-y-auto lg:max-h-220">
           <div className="bg-white p-6 rounded-lg shadow-md h-fit">
             <h2 className="text-lg font-semibold text-[#23306A] mb-4">Inserir Dados</h2>
-            <form className="space-y-3" onSubmit={handleSubmit}>
-              <input 
-                type="number" 
-                name="avesInicio"
-                placeholder="Número de aves vivas no início" 
-                className="w-full p-2 border rounded" 
-                value={formData.avesInicio}
-                onChange={handleChange}
-              />
-              <input 
-                type="number" 
-                name="avesMortas"
-                placeholder="Número de aves mortas ou descartadas" 
-                className="w-full p-2 border rounded" 
-                value={formData.avesMortas}
-                onChange={handleChange}
-              />
-              <input 
-                type="number" 
-                name="ovosColetados"
-                placeholder="Ovos coletados (diário)" 
-                className="w-full p-2 border rounded" 
-                value={formData.ovosColetados}
-                onChange={handleChange}
-              />
-              <input 
-                type="number" 
-                name="racaoConsumida"
-                placeholder="Kg de ração consumido durante o lote" 
-                className="w-full p-2 border rounded" 
-                value={formData.racaoConsumida}
-                onChange={handleChange}
-              />
-              <input 
-                type="number" 
-                name="pesoFinal"
-                placeholder="Peso das aves ao final do abate" 
-                className="w-full p-2 border rounded" 
-                value={formData.pesoFinal}
-                onChange={handleChange}
-              />
-              <input 
-                type="number" 
-                name="pesoInicial"
-                placeholder="Peso das aves no início do lote" 
-                className="w-full p-2 border rounded" 
-                value={formData.pesoInicial}
-                onChange={handleChange}
-              />
-              <input 
-                type="number" 
-                name="avesFinal"
-                placeholder="Número de aves total do lote ao final do abate" 
-                className="w-full p-2 border rounded" 
-                value={formData.avesFinal}
-                onChange={handleChange}
-              />
-              <input 
-                type="number" 
-                name="idadeAves"
-                placeholder="Idade das aves" 
-                className="w-full p-2 border rounded" 
-                value={formData.idadeAves}
-                onChange={handleChange}
-              />
+            <form className="space-y-2" onSubmit={handleSubmit}>
+              
+              <p>Responsável pela atualização de dados</p>
               <input 
                 type="text" 
                 name="responsavel"
@@ -725,140 +665,6 @@ export default function Inserirdados() {
 
         <div className="flex-1 bg-[#FFF7E3] p-4 overflow-y-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-4">
-            <div className="relative bg-[#FFFFFF] w-full h-50 text-white p-6 shadow-lg shadow-black/50 rounded-lg text-center">
-              <div className="group relative">
-                <FiAlertCircle className="absolute top-2 right-2 text-yellow-500 text-xl cursor-pointer" />
-                <div className="absolute hidden group-hover:block right-0 top-8 w-64 p-2 bg-orange-500 text-white text-sm rounded-lg z-10">
-                  {tooltips.mortalidade}
-                </div>
-              </div>
-              <h2 className="text-xl mb-10 font-semibold text-[#23306A]">Mortalidade</h2>
-              <button 
-                onClick={() => generateReport("mortalidade")} 
-                className="px-5 py-full rounded-none flex justify-center items-center transition-all duration-100 font-['Montserrat'] hover:cursor-pointer w-full"
-              >
-                <Quartobutton text="Gerar relatório" type="button" />
-              </button>
-            </div>
-
-            {/* Viabilidade */}
-            <div className="relative bg-[#FFFFFF] w-full h-50 text-white p-6 shadow-lg shadow-black/50 rounded-lg text-center">
-              <div className="group relative">
-                <FiAlertCircle className="absolute top-2 right-2 text-yellow-500 text-xl cursor-pointer" />
-                <div className="absolute hidden group-hover:block right-0 top-8 w-64 p-2 bg-orange-500 text-white text-sm rounded-lg z-10">
-                  {tooltips.viabilidade}
-                </div>
-              </div>
-              <h2 className="text-xl mb-10 font-semibold text-[#23306A]">Viabilidade</h2>
-              <button 
-                onClick={() => generateReport("viabilidade")} 
-                className="px-5 py-full rounded-none flex justify-center items-center transition-all duration-100 font-['Montserrat'] hover:cursor-pointer w-full"
-              >
-                <Quartobutton text="Gerar relatório" type="button" />
-              </button>
-            </div>
-
-            {/* Ovos coletados */}
-            <div className="relative bg-[#FFFFFF] w-full h-50 text-white p-6 shadow-lg shadow-black/50 rounded-lg text-center">
-              <div className="group relative">
-                <FiAlertCircle className="absolute top-2 right-2 text-yellow-500 text-xl cursor-pointer" />
-                <div className="absolute hidden group-hover:block right-0 top-8 w-64 p-2 bg-orange-500 text-white text-sm rounded-lg z-10">
-                  {tooltips.ovos}
-                </div>
-              </div>
-              <h2 className="text-xl mb-10 font-semibold text-[#23306A]">Ovo coletados(dia)</h2>
-              <button 
-                onClick={() => generateReport("ovos")} 
-                className="px-5 py-full rounded-none flex justify-center items-center transition-all duration-100 font-['Montserrat'] hover:cursor-pointer w-full"
-              >
-                <Quartobutton text="Gerar relatório" type="button" />
-              </button>
-            </div>
-
-            {/* Conversão alimentar */}
-            <div className="relative bg-[#FFFFFF] w-full h-50 text-white p-6 shadow-lg shadow-black/50 rounded-lg text-center">
-              <div className="group relative">
-                <FiAlertCircle className="absolute top-2 right-2 text-yellow-500 text-xl cursor-pointer" />
-                <div className="absolute hidden group-hover:block right-0 top-8 w-64 p-2 bg-orange-500 text-white text-sm rounded-lg z-10">
-                  {tooltips.conversao}
-                </div>
-              </div>
-              <h2 className="text-xl mb-10 font-semibold text-[#23306A]">Conversão alimentar</h2>
-              <button 
-                onClick={() => generateReport("conversao")} 
-                className="px-5 py-full rounded-none flex justify-center items-center transition-all duration-100 font-['Montserrat'] hover:cursor-pointer w-full"
-              >
-                <Quartobutton text="Gerar relatório" type="button" />
-              </button>
-            </div>
-
-            {/* Fator de produção */}
-            <div className="relative bg-[#FFFFFF] w-full h-50 text-white p-6 shadow-lg shadow-black/50 rounded-lg text-center">
-              <div className="group relative">
-                <FiAlertCircle className="absolute top-2 right-2 text-yellow-500 text-xl cursor-pointer" />
-                <div className="absolute hidden group-hover:block right-0 top-8 w-64 p-2 bg-orange-500 text-white text-sm rounded-lg z-10">
-                  {tooltips.fator}
-                </div>
-              </div>
-              <h2 className="text-xl mb-10 font-semibold text-[#23306A]">Fator de produção</h2>
-              <button 
-                onClick={() => generateReport("fator")} 
-                className="px-5 py-full rounded-none flex justify-center items-center transition-all duration-100 font-['Montserrat'] hover:cursor-pointer w-full"
-              >
-                <Quartobutton text="Gerar relatório" type="button" />
-              </button>
-            </div>
-
-            {/* Peso médio */}
-            <div className="relative bg-[#FFFFFF] w-full h-50 text-white p-6 shadow-lg shadow-black/50 rounded-lg text-center">
-              <div className="group relative">
-                <FiAlertCircle className="absolute top-2 right-2 text-yellow-500 text-xl cursor-pointer" />
-                <div className="absolute hidden group-hover:block right-0 top-8 w-64 p-2 bg-orange-500 text-white text-sm rounded-lg z-10">
-                  {tooltips.peso}
-                </div>
-              </div>
-              <h2 className="text-xl mb-10 font-semibold text-[#23306A]">Peso médio</h2>
-              <button 
-                onClick={() => generateReport("peso")} 
-                className="px-5 py-full rounded-none flex justify-center items-center transition-all duration-100 font-['Montserrat'] hover:cursor-pointer w-full"
-              >
-                <Quartobutton text="Gerar relatório" type="button" />
-              </button>
-            </div>
-
-            {/* Índice de eficiência */}
-            <div className="relative bg-[#FFFFFF] w-full h-50 text-white p-6 shadow-lg shadow-black/50 rounded-lg text-center">
-              <div className="group relative">
-                <FiAlertCircle className="absolute top-2 right-2 text-yellow-500 text-xl cursor-pointer" />
-                <div className="absolute hidden group-hover:block right-0 top-8 w-64 p-2 bg-orange-500 text-white text-sm rounded-lg z-10">
-                  {tooltips.indice}
-                </div>
-              </div>
-              <h2 className="text-xl mb-10 font-semibold text-[#23306A]">Índice de eficiência produtiva</h2>
-              <button 
-                onClick={() => generateReport("indice")} 
-                className="px-5 py-full rounded-none flex justify-center items-center transition-all duration-100 font-['Montserrat'] hover:cursor-pointer w-full"
-              >
-                <Quartobutton text="Gerar relatório" type="button" />
-              </button>
-            </div>
-
-            {/* Ganho médio */}
-            <div className="relative bg-[#FFFFFF] w-full h-50 text-white p-6 shadow-lg shadow-black/50 rounded-lg text-center">
-              <div className="group relative">
-                <FiAlertCircle className="absolute top-2 right-2 text-yellow-500 text-xl cursor-pointer" />
-                <div className="absolute hidden group-hover:block right-0 top-8 w-64 p-2 bg-orange-500 text-white text-sm rounded-lg z-10">
-                  {tooltips.ganho}
-                </div>
-              </div>
-              <h2 className="text-xl mb-10 font-semibold text-[#23306A]">Ganho médio de peso</h2>
-              <button 
-                onClick={() => generateReport("ganho")} 
-                className="px-5 py-full rounded-none flex justify-center items-center transition-all duration-100 font-['Montserrat'] hover:cursor-pointer w-full"
-              >
-                <Quartobutton text="Gerar relatório" type="button" />
-              </button>
-            </div>
 
             {/* Lote */}
             <div className="relative bg-[#FFFFFF] w-full h-50 text-white p-6 shadow-lg shadow-black/50 rounded-lg text-center">
@@ -876,15 +682,6 @@ export default function Inserirdados() {
                 <Quartobutton text="Gerar relatório" type="button" />
               </button>
             </div>
-            
-            <div className="w-full py-4 bg-[#FFF7E3] sticky bottom-0 z-10">
-            <div 
-                onClick={() => generateReport("all")} 
-                className="px-5 py-full rounded-none flex justify-center items-center transition-all duration-100 font-['Montserrat'] hover:cursor-pointer w-full"
-                >
-                    <Quartobutton text="Gerar relatório completo" type="button" />
-            </div>
-              </div>
             </div>
           </div>
           </main>

@@ -20,7 +20,7 @@ export default function Entrar() {
                 {/* Body */}
                 <div className="shadow-[inset_0_-4px_0_0_#222222] gap-10 flex flex-col lg:flex-row justify-center items-center lg:items-start lg:gap-70 w-full flex-grow overflow-y-auto">
                     
-                    {/* Seção da esquerda (vai para baixo no mobile) */}
+                    {/* Seção da esquerda (vai para baixo no mobile)
                     <div className="lg:flex lg:flex-col items-center lg:items-start space-y-6 max-w-md text-center lg:text-left">
                         <div>
                             <img className=" lg:pt-6 lg:max-w-[80%] lg:max-w-[100%]" src={LogoIni.src} alt="Logo" />
@@ -31,7 +31,7 @@ export default function Entrar() {
                                 poderá gerar relatórios, visualizar dashboards e realizar cálculos avícolas.
                             </p>
                         </div>
-                    </div>
+                    </div> */}
                     
                     {/* Seção da direita (Login) */}
                     <div className="bg-white border border-black p-6 w-full max-w-[28rem] rounded-lg shadow-lg mt-10 mb-10 lg:mt-10">
