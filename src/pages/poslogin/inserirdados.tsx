@@ -8,7 +8,7 @@ import html2pdf from "html2pdf.js";
 import { db } from '../../services/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { useState, ChangeEvent, FormEvent } from 'react';
-import Barra from "@/components/barralateral";
+import Barra from "@/components/menuinserdados";
 
 interface FormData {
   avesInicio: string;
@@ -615,7 +615,7 @@ export default function Inserirdados() {
   };
 
   return (
-    <div className=" w-full min-h-screen bg-[#FFF7E3] flex flex-row overflow-x-hidden">
+    <div className=" w-full min-h-screen bg-[#FFF7E3] flex flex-col overflow-x-hidden">
       
       <div>
          <Barra />

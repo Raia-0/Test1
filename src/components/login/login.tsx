@@ -64,12 +64,7 @@ export default function Login() {
         <div className="flex flex-col space-y-3">
           <Thirdbutton text="Entrar" type="submit" />
           {/* Este botão com Link precisa ser ajustado se for usar autenticação com Google */}
-          <button
-            type="button" // Chama a função para login com o Google
-            className="w-full bg-white text-black py-3 px-6 rounded-md border border-[#222222] font-['Montserrat'] hover:bg-gray-100 hover:cursor-pointer"
-          >
-            Entrar com o Google
-          </button>
+          
         </div>
       </form>
 

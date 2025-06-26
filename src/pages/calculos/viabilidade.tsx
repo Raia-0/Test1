@@ -4,11 +4,10 @@ import { Link } from "react-router-dom";
 import { FiMenu, FiX, FiHome, FiSettings, FiUser, FiAlertCircle } from "react-icons/fi";
 import Quartobutton from "@/components/buttons/quartobutton";
 import Menuinserdados from "@/components/menuinserdados";
-import html2pdf from "html2pdf.js";
 import { db } from '../../services/firebase';
 import { doc, setDoc } from 'firebase/firestore';
-import { useState, ChangeEvent, FormEvent } from 'react';
-import Barra from "@/components/barralateral";
+import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
+import Barra from "@/components/MenuCal";
 
 interface FormData {
   avesInicio: string;
@@ -39,6 +38,12 @@ interface CalculatedData {
   dataAtual: string;
 }
 
+declare global {
+  interface Window {
+    html2pdf: any;
+  }
+}
+
 export default function Inserirdados() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [formData, setFormData] = useState<FormData>({
@@ -54,6 +59,14 @@ export default function Inserirdados() {
     inicioLote: "",
     fimLote: ""
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      import('html2pdf.js').then((html2pdf) => {
+        window.html2pdf = html2pdf.default;
+      });
+    }
+  }, []);
 
   function showErrorPopup(message: string) {
     alert(message);
@@ -579,7 +592,7 @@ export default function Inserirdados() {
     element.innerHTML = content;
     
     const opt = {
-        margin: 10 as const, // ou [10, 10] se quiser margens diferentes
+        margin: 10 as const,
         filename: `${title}.pdf`,
         image: { 
           type: 'jpeg' as const, 
@@ -595,11 +608,14 @@ export default function Inserirdados() {
         }
     };
     
-    html2pdf()
-    .from(element)
-    .set(opt)
-    .save();
-
+    if (window.html2pdf) {
+      window.html2pdf()
+        .from(element)
+        .set(opt)
+        .save();
+    } else {
+      showErrorPopup("A função de exportar PDF ainda não está carregada. Tente novamente em alguns segundos.");
+    }
   };
 
   const tooltips = {
@@ -615,7 +631,7 @@ export default function Inserirdados() {
   };
 
   return (
-    <div className=" w-full min-h-screen bg-[#FFF7E3] flex flex-row overflow-x-hidden">
+    <div className=" w-full min-h-screen bg-[#FFF7E3] flex flex-col overflow-x-hidden">
       
       <div>
          <Barra />
@@ -642,6 +658,34 @@ export default function Inserirdados() {
                 placeholder="Número de aves mortas ou descartadas" 
                 className="w-full p-2 border rounded" 
                 value={formData.avesMortas}
+                onChange={handleChange}
+              />
+              
+              <p>Peso das aves ao final do abate</p>
+              <input 
+                type="number" 
+                name="pesoFinal"
+                placeholder="Peso das aves ao final do abate" 
+                className="w-full p-2 border rounded" 
+                value={formData.pesoFinal}
+                onChange={handleChange}
+              />
+              <p>N° de aves total do lote ao final do abate</p>
+              <input 
+                type="number" 
+                name="avesFinal"
+                placeholder="Número de aves total do lote ao final do abate" 
+                className="w-full p-2 border rounded" 
+                value={formData.avesFinal}
+                onChange={handleChange}
+              />
+              <p>Idade das aves</p>
+              <input 
+                type="number" 
+                name="idadeAves"
+                placeholder="Idade das aves" 
+                className="w-full p-2 border rounded" 
+                value={formData.idadeAves}
                 onChange={handleChange}
               />
               <p>Responsável pela atualização de dados</p>
@@ -682,19 +726,18 @@ export default function Inserirdados() {
 
         <div className="flex-1 bg-[#FFF7E3] p-4 overflow-y-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-4">
-           
 
-            {/* Viabilidade */}
+            {/* Índice de eficiência */}
             <div className="relative bg-[#FFFFFF] w-full h-50 text-white p-6 shadow-lg shadow-black/50 rounded-lg text-center">
               <div className="group relative">
                 <FiAlertCircle className="absolute top-2 right-2 text-yellow-500 text-xl cursor-pointer" />
                 <div className="absolute hidden group-hover:block right-0 top-8 w-64 p-2 bg-orange-500 text-white text-sm rounded-lg z-10">
-                  {tooltips.viabilidade}
+                  {tooltips.indice}
                 </div>
               </div>
-              <h2 className="text-xl mb-10 font-semibold text-[#23306A]">Viabilidade</h2>
+              <h2 className="text-xl mb-10 font-semibold text-[#23306A]">Índice de eficiência produtiva</h2>
               <button 
-                onClick={() => generateReport("viabilidade")} 
+                onClick={() => generateReport("indice")} 
                 className="px-5 py-full rounded-none flex justify-center items-center transition-all duration-100 font-['Montserrat'] hover:cursor-pointer w-full"
               >
                 <Quartobutton text="Gerar relatório" type="button" />

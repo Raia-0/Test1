@@ -1,8 +1,6 @@
 import Menudash from "@/components/menudash";
 import { useState, useEffect } from "react";
-import { getDatabase, ref, get } from "firebase/database";
-import app from "@/services/firebase";
-import Barra from "@/components/barralateral";
+import Barra from "@/components/MenuUmid";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -31,6 +29,43 @@ ChartJS.register(
   Legend
 );
 
+// Dados fixos de umidade entre 40 e 80%, 180 registros para últimos 180 dias
+const staticHumidityData: HumidityEntry[] = (() => {
+  const now = new Date();
+  const fixedValues = [
+    45, 52, 47, 55, 60, 58, 63, 67, 69, 72,
+    70, 65, 62, 59, 54, 53, 51, 49, 46, 48,
+    50, 55, 58, 61, 64, 66, 68, 71, 73, 75,
+    74, 70, 68, 65, 63, 60, 58, 56, 54, 52,
+    50, 48, 47, 45, 44, 46, 49, 51, 54, 57,
+    60, 63, 66, 69, 71, 73, 72, 70, 68, 65,
+    63, 61, 59, 57, 55, 53, 51, 50, 48, 46,
+    44, 45, 47, 49, 52, 54, 56, 59, 61, 64,
+    66, 68, 70, 72, 74, 75, 73, 71, 69, 67,
+    65, 63, 61, 59, 57, 55, 53, 51, 49, 48,
+    47, 46, 45, 44, 46, 48, 50, 53, 55, 58,
+    60, 62, 64, 66, 68, 70, 72, 74, 76, 78,
+    75, 73, 71, 69, 67, 65, 63, 61, 59, 57,
+    55, 53, 51, 50, 48, 46, 44, 45, 47, 49,
+    51, 53, 55, 57, 59, 61, 63, 65, 67, 69,
+    71, 73, 75, 77, 79, 80, 78, 76, 74, 72,
+    70, 68, 66, 64, 62, 60, 58, 56, 54, 52,
+    50, 48, 46, 45, 44, 43, 45, 47, 49, 51,
+    53, 55, 57, 59, 61, 63, 65, 67, 69, 71
+  ];
+
+  const data: HumidityEntry[] = [];
+  for (let i = 0; i < 180; i++) {
+    const date = new Date(now);
+    date.setDate(now.getDate() - (179 - i));
+    data.push({
+      value: fixedValues[i % fixedValues.length],
+      timestamp: date.toISOString(),
+    });
+  }
+  return data;
+})();
+
 export default function Dashboard() {
   const [humidity, setHumidity] = useState("--");
   const [humidityHistory, setHumidityHistory] = useState<HumidityEntry[]>([]);
@@ -39,54 +74,12 @@ export default function Dashboard() {
   const [chartData180Days, setChartData180Days] = useState<any>({ labels: [], datasets: [] });
   const [buttonClicked, setButtonClicked] = useState(false);
 
-  const generateRandomData = () => {
-    const now = new Date();
-    const newData: HumidityEntry[] = [];
-
-    for (let i = 0; i < 180; i++) {
-      const date = new Date(now);
-      date.setDate(date.getDate() - (179 - i));
-      newData.push({
-        value: Math.floor(Math.random() * 41) + 40, // 40 a 80%
-        timestamp: date.toISOString()
-      });
-    }
-
-    setHumidityHistory(newData);
-    setButtonClicked(true);
-  };
-
-  const fetchRealtimeHumidity = async () => {
-    const db = getDatabase(app);
-    const humRef = ref(db, "sensores/umidade");
-    const histRef = ref(db, "sensoresHistorico/umidade");
-
-    try {
-      const humSnap = await get(humRef);
-      if (humSnap.exists()) {
-        const hum = Number(humSnap.val());
-        setHumidity(hum + "%");
-      }
-
-      if (!buttonClicked) {
-        const histSnap = await get(histRef);
-        if (histSnap.exists()) {
-          const histData = histSnap.val();
-          const histArray = Object.values(histData) as HumidityEntry[];
-          const sorted = histArray.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-          setHumidityHistory(sorted);
-        }
-      }
-    } catch (error) {
-      console.error("Erro ao buscar umidade do Realtime Database:", error);
-    }
-  };
-
+  // Substitui a geração aleatória pelo uso dos dados fixos ao abrir a página
   useEffect(() => {
-    fetchRealtimeHumidity();
-    const interval = setInterval(fetchRealtimeHumidity, 30000);
-    return () => clearInterval(interval);
-  }, [buttonClicked]);
+    setHumidityHistory(staticHumidityData);
+    setHumidity(staticHumidityData[179].value + "%");
+    setButtonClicked(true);
+  }, []);
 
   useEffect(() => {
     const now = new Date();
@@ -117,18 +110,9 @@ export default function Dashboard() {
   }, [humidityHistory]);
 
   return (
-    <div className="flex flex-row w-full h-screen min-h-screen overflow-y-auto bg-[#E3F7FF] flex flex-col">
+    <div className="flex flex-col w-full h-screen min-h-screen overflow-y-auto bg-[#E3F7FF] flex flex-col">
       <div><Barra /></div>
-      {!buttonClicked && (
-        <div className="flex justify-center my-4 h-20">
-          <button
-            onClick={generateRandomData}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Gerar 180 Dados Aleatórios (40-80%)
-          </button>
-        </div>
-      )}
+      {/* Removi o botão pois os dados já são fixos */}
       <div className="bg-[#C6E7F5] lg:mr-60 w-full lg:w-350 lg:ml-60 p-4">
         <div className="grid grid-cols-1">
           <div style={{ backgroundColor: "#4C9EFF" }} className="text-white p-5 shadow-md rounded-md text-center">

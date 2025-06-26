@@ -67,7 +67,7 @@ export default function menuDashB() {
           </div>
           {/* Botão Calculos */}
           <div
-            className="relative px-5 py-full rounded-none flex justify-center items-center transition-all duration-100 font-['Montserrat'] hover:cursor-pointer hover:shadow-[inset_0_-4px_0_0_#9D2525]"
+            className="relative px-5 py-full rounded-none flex justify-center items-center transition-all duration-100 font-['Montserrat'] hover:cursor-pointer "
             onMouseEnter={() => {
               setShowGraficosSubmenu(false);
               setShowCalculosSubmenu(true);
@@ -77,7 +77,7 @@ export default function menuDashB() {
             <Link
               to=""
             >
-              <Secondbutton text="Cálculos" type="button" />
+              <Primarybutton text="Cálculos" type="button" />
             </Link>
 
             <div
@@ -115,7 +115,7 @@ export default function menuDashB() {
             to="/Inserirdados"
             className="px-5 py-full rounded-none flex justify-center items-center transition-all duration-100 font-['Montserrat'] hover:cursor-pointer"
           >
-            <Primarybutton text="Relatório geral" type="button" />
+            <Secondbutton text="Relatório geral" type="button" />
           </Link>
         </div>
 

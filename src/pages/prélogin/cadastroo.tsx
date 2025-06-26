@@ -3,9 +3,8 @@ import { useState } from "react";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import Menulogin from "@/components/menulogin";
 import Footer from "@/components/footer";
-import LogoIni from "@/assets/Logo.png";
-import "../../services/firebase";
 import { Link } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // ícones de olho
 
 export default function CadastroSimples() {
     const [email, setEmail] = useState("");
@@ -13,6 +12,9 @@ export default function CadastroSimples() {
     const [confirmarSenha, setConfirmarSenha] = useState("");
     const [erro, setErro] = useState("");
     const [sucesso, setSucesso] = useState("");
+
+    const [mostrarSenha, setMostrarSenha] = useState(false);
+    const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -39,23 +41,10 @@ export default function CadastroSimples() {
 
     return (
         <div className="w-full min-h-screen bg-[#FFF7E3] flex flex-col overflow-x-hidden">
-            {/* Header */}
             <Menulogin />
 
-            {/* Body com rolagem */}
             <div className="flex flex-grow overflow-y-auto">
                 <div className="shadow-[inset_0_-4px_0_0_#222222] gap-10 flex flex-col lg:flex-row justify-center items-center lg:items-start lg:gap-70 w-full flex-grow p-6">
-                    
-                    {/* Lado Esquerdo */}
-                    {/* <div className="lg:flex lg:flex-col items-center lg:items-start space-y-6 max-w-md text-center lg:text-left">
-                        <img className="lg:pt-6 lg:max-w-[100%]" src={LogoIni.src} alt="Logo" />
-                        <p className="w-full text-lg lg:text-2xl font-['Montserrat'] text-[#222222]">
-                            Ao ingressar no projeto avicontrol você irá ter uma melhor visão sobre a sua granja,
-                            gerar relatórios, ver dashboards e realizar os cálculos avícolas.
-                        </p>
-                    </div> */}
-
-                    {/* Formulário */}
                     <div className="bg-white border border-black p-6 w-full max-w-[28rem] rounded-lg shadow-lg mt-10 mb-10 lg:mt-10">
                         <h2 className="text-2xl font-bold mb-6 text-center">Seja Bem-Vindo!</h2>
                         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
@@ -70,27 +59,45 @@ export default function CadastroSimples() {
                                     className="w-full p-2 border border-gray-300 rounded"
                                 />
                             </label>
+
                             <label>
                                 Senha:
-                                <input
-                                    type="password"
-                                    value={senha}
-                                    onChange={(e) => setSenha(e.target.value)}
-                                    required
-                                    placeholder="Digite sua senha"
-                                    className="w-full p-2 border border-gray-300 rounded"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={mostrarSenha ? "text" : "password"}
+                                        value={senha}
+                                        onChange={(e) => setSenha(e.target.value)}
+                                        required
+                                        placeholder="Digite sua senha"
+                                        className="w-full p-2 pr-10 border border-gray-300 rounded"
+                                    />
+                                    <span
+                                        onClick={() => setMostrarSenha(!mostrarSenha)}
+                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-600"
+                                    >
+                                        {mostrarSenha ? <FaEyeSlash /> : <FaEye />}
+                                    </span>
+                                </div>
                             </label>
+
                             <label>
                                 Confirmar senha:
-                                <input
-                                    type="password"
-                                    value={confirmarSenha}
-                                    onChange={(e) => setConfirmarSenha(e.target.value)}
-                                    required
-                                    placeholder="Confirme sua senha"
-                                    className="w-full p-2 border border-gray-300 rounded"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={mostrarConfirmarSenha ? "text" : "password"}
+                                        value={confirmarSenha}
+                                        onChange={(e) => setConfirmarSenha(e.target.value)}
+                                        required
+                                        placeholder="Confirme sua senha"
+                                        className="w-full p-2 pr-10 border border-gray-300 rounded"
+                                    />
+                                    <span
+                                        onClick={() => setMostrarConfirmarSenha(!mostrarConfirmarSenha)}
+                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-600"
+                                    >
+                                        {mostrarConfirmarSenha ? <FaEyeSlash /> : <FaEye />}
+                                    </span>
+                                </div>
                             </label>
 
                             {erro && <p className="text-red-600 font-medium text-sm">{erro}</p>}
@@ -104,7 +111,6 @@ export default function CadastroSimples() {
                             </button>
                         </form>
 
-                        {/* Redirecionamento */}
                         <div className="mt-6 border-t border-gray-300 pt-4 text-center">
                             <p className="mb-2 font-medium">Já possui cadastro?</p>
                             <Link
@@ -118,7 +124,6 @@ export default function CadastroSimples() {
                 </div>
             </div>
 
-            {/* Footer visível com rolagem */}
             <Footer />
         </div>
     );

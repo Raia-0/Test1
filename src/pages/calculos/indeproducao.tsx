@@ -4,11 +4,10 @@ import { Link } from "react-router-dom";
 import { FiMenu, FiX, FiHome, FiSettings, FiUser, FiAlertCircle } from "react-icons/fi";
 import Quartobutton from "@/components/buttons/quartobutton";
 import Menuinserdados from "@/components/menuinserdados";
-import html2pdf from "html2pdf.js";
 import { db } from '../../services/firebase';
 import { doc, setDoc } from 'firebase/firestore';
-import { useState, ChangeEvent, FormEvent } from 'react';
-import Barra from "@/components/barralateral";
+import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
+import Barra from "@/components/MenuCal";
 
 interface FormData {
   avesInicio: string;
@@ -39,6 +38,12 @@ interface CalculatedData {
   dataAtual: string;
 }
 
+declare global {
+  interface Window {
+    html2pdf: any;
+  }
+}
+
 export default function Inserirdados() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [formData, setFormData] = useState<FormData>({
@@ -54,6 +59,14 @@ export default function Inserirdados() {
     inicioLote: "",
     fimLote: ""
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      import('html2pdf.js').then((html2pdf) => {
+        window.html2pdf = html2pdf.default;
+      });
+    }
+  }, []);
 
   function showErrorPopup(message: string) {
     alert(message);
@@ -579,7 +592,7 @@ export default function Inserirdados() {
     element.innerHTML = content;
     
     const opt = {
-        margin: 10 as const, // ou [10, 10] se quiser margens diferentes
+        margin: 10 as const,
         filename: `${title}.pdf`,
         image: { 
           type: 'jpeg' as const, 
@@ -595,11 +608,14 @@ export default function Inserirdados() {
         }
     };
     
-    html2pdf()
-    .from(element)
-    .set(opt)
-    .save();
-
+    if (window.html2pdf) {
+      window.html2pdf()
+        .from(element)
+        .set(opt)
+        .save();
+    } else {
+      showErrorPopup("A função de exportar PDF ainda não está carregada. Tente novamente em alguns segundos.");
+    }
   };
 
   const tooltips = {
@@ -615,7 +631,7 @@ export default function Inserirdados() {
   };
 
   return (
-    <div className=" w-full min-h-screen bg-[#FFF7E3] flex flex-row overflow-x-hidden">
+    <div className=" w-full min-h-screen bg-[#FFF7E3] flex flex-col overflow-x-hidden">
       
       <div>
          <Barra />

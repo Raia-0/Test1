@@ -1,8 +1,6 @@
 import Menudash from "@/components/menudash";
 import { useState, useEffect } from "react";
-import { getDatabase, ref, get } from "firebase/database";
-import app from "@/services/firebase";
-import Barra from "@/components/barralateral";
+import Barra from "@/components/MenuTemp";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -26,11 +24,48 @@ ChartJS.register(
   Legend
 );
 
-// Tipo para os dados de temperatura
 type TemperatureEntry = {
   value: number;
   timestamp: string;
 };
+
+// 🔒 Dados fixos entre 25°C e 30°C por 180 dias
+const staticTemperatureData: TemperatureEntry[] = (() => {
+  const now = new Date();
+  const data: TemperatureEntry[] = [];
+
+  const fixedValues = [
+    27.3, 28.1, 26.5, 25.8, 29.0, 26.1, 28.4, 27.7, 29.5, 25.2,
+    28.9, 26.8, 27.5, 29.1, 26.0, 27.9, 28.2, 25.7, 29.4, 27.0,
+    28.0, 27.6, 25.4, 28.3, 29.3, 26.7, 27.8, 25.9, 28.6, 26.3,
+    28.8, 27.1, 29.2, 25.5, 26.9, 28.7, 27.2, 25.6, 27.4, 28.5,
+    26.6, 27.0, 28.1, 25.8, 27.6, 26.4, 29.1, 27.5, 25.3, 28.9,
+    26.2, 28.0, 27.3, 26.0, 28.2, 27.7, 25.9, 29.0, 26.1, 28.3,
+    27.4, 25.6, 29.2, 27.1, 26.8, 28.4, 27.8, 25.7, 28.6, 26.5,
+    29.3, 27.2, 25.4, 28.5, 27.9, 26.3, 28.7, 27.0, 25.5, 28.8,
+    26.9, 29.4, 27.6, 26.6, 28.9, 27.5, 25.2, 29.0, 26.4, 28.0,
+    27.3, 25.8, 28.1, 27.7, 25.6, 29.1, 26.7, 28.2, 27.8, 26.1,
+    28.3, 27.1, 25.9, 28.4, 26.0, 27.9, 28.5, 26.2, 27.0, 28.6,
+    27.2, 26.3, 28.7, 27.3, 25.4, 28.8, 26.5, 27.4, 28.9, 26.6,
+    27.5, 29.0, 26.7, 27.6, 29.1, 26.8, 27.7, 29.2, 26.9, 27.8,
+    29.3, 27.0, 27.9, 29.4, 27.1, 28.0, 29.5, 27.2, 28.1, 29.0,
+    27.3, 28.2, 28.9, 27.4, 28.3, 28.8, 27.5, 28.4, 28.7, 27.6,
+    28.5, 28.6, 27.7, 28.6, 27.8, 28.5, 27.9, 28.4, 28.0, 28.3,
+    28.1, 28.2, 28.2, 28.1, 28.3, 28.2, 28.4, 28.3, 28.5, 28.4
+  ];
+
+  for (let i = 0; i < 180; i++) {
+    const date = new Date(now);
+    date.setDate(now.getDate() - (179 - i));
+
+    data.push({
+      value: fixedValues[i % fixedValues.length],
+      timestamp: date.toISOString(),
+    });
+  }
+
+  return data;
+})();
 
 export default function Dashboard() {
   const [temperature, setTemperature] = useState("--");
@@ -38,58 +73,11 @@ export default function Dashboard() {
   const [chartData7Days, setChartData7Days] = useState<ChartData<"line">>({ labels: [], datasets: [] });
   const [chartData30Days, setChartData30Days] = useState<ChartData<"line">>({ labels: [], datasets: [] });
   const [chartData180Days, setChartData180Days] = useState<ChartData<"line">>({ labels: [], datasets: [] });
-  const [buttonClicked, setButtonClicked] = useState(false);
-
-  const generateRandomData = () => {
-    const now = new Date();
-    const newData: TemperatureEntry[] = [];
-
-    for (let i = 0; i < 180; i++) {
-      const date = new Date(now);
-      date.setDate(date.getDate() - (179 - i)); // Distribui os dados nos últimos 180 dias
-      newData.push({
-        value: Math.floor(Math.random() * 30) + 10, // Valores entre 10 e 39
-        timestamp: date.toISOString(),
-      });
-    }
-
-    setTemperatureHistory(newData);
-    setButtonClicked(true);
-  };
-
-  const fetchRealtimeTemperature = async () => {
-    const db = getDatabase(app);
-    const tempRef = ref(db, "sensores/temperatura");
-    const histRef = ref(db, "sensoresHistorico/temperatura");
-
-    try {
-      // valor atual
-      const tempSnap = await get(tempRef);
-      if (tempSnap.exists()) {
-        const temp = Number(tempSnap.val());
-        setTemperature(temp + "°C");
-      }
-
-      // histórico (só carrega se o botão não foi clicado)
-      if (!buttonClicked) {
-        const histSnap = await get(histRef);
-        if (histSnap.exists()) {
-          const histData = histSnap.val();
-          const histArray = Object.values(histData) as TemperatureEntry[];
-          const sorted = histArray.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-          setTemperatureHistory(sorted);
-        }
-      }
-    } catch (error) {
-      console.error("Erro ao buscar temperatura do Realtime Database:", error);
-    }
-  };
 
   useEffect(() => {
-    fetchRealtimeTemperature();
-    const interval = setInterval(fetchRealtimeTemperature, 30000);
-    return () => clearInterval(interval);
-  }, [buttonClicked]);
+    setTemperatureHistory(staticTemperatureData);
+    setTemperature(staticTemperatureData[179].value.toFixed(1) + "°C");
+  }, []);
 
   useEffect(() => {
     const createChartData = (data: TemperatureEntry[]): ChartData<"line"> => ({
@@ -121,22 +109,11 @@ export default function Dashboard() {
   }, [temperatureHistory]);
 
   return (
-    <div className="flex flex-row w-full h-screen min-h-screen overflow-y-auto bg-[#FFF7E3] flex flex-col">
+    <div className="flex flex-col w-full h-screen min-h-screen overflow-y-auto bg-[#FFF7E3] flex flex-col">
       <div>
         <Barra />
       </div>
-
-      {!buttonClicked && (
-        <div className="flex justify-center my-4 h-20">
-          <button
-            onClick={generateRandomData}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Gerar 180 Dados Aleatórios (10-39°C)
-          </button>
-        </div>
-      )}
-
+      {/* Div dos graficos */}
       <div className="bg-[#F5E7C6] lg:mr-60 w-full lg:w-350 lg:ml-60 p-4">
         {/* Card de Temperatura */}
         <div className="grid grid-cols-1">
@@ -152,18 +129,18 @@ export default function Dashboard() {
         {/* Gráficos de Temperatura */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
           <div className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="mb-2 font-semibold">Últimos 7 dados</h3>
+            <h3 className="mb-2 font-semibold">Últimos 7 Dias</h3>
             <Line data={chartData7Days} height={200} />
           </div>
           <div className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="mb-2 font-semibold">Últimos 30 dados</h3>
+            <h3 className="mb-2 font-semibold">Últimos 30 Dias</h3>
             <Line data={chartData30Days} height={200} />
           </div>
         </div>
 
         <div className="flex justify-center mt-8">
           <div className="bg-white p-4 rounded-lg shadow-md w-full lg:w-1/2">
-            <h3 className="mb-2 font-semibold">Todos os 180 dados</h3>
+            <h3 className="mb-2 font-semibold">Últimos 180 Dias</h3>
             <Line data={chartData180Days} height={200} />
           </div>
         </div>

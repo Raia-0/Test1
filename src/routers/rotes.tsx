@@ -15,7 +15,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 import Dash from "@/pages/poslogin/dashboard";
-import Relatório from "@/pages/poslogin/relatorios";
 import Inserirdados from "@/pages/poslogin/inserirdados";
 import InserirALLdados from '@/pages/poslogin/todosdados';
 import Sair from "@/pages/poslogin/Sair";
@@ -45,6 +44,8 @@ const Rotas = () => {
                     <Route path="/Register" element={<Register />} />
                     <Route path="/RecuperarSenha" element={<RecuperarSenha />} />
                     <Route path="/NovaSenha" element={<NovaSenha />} />
+
+                    
                     <Route path="/Dash" element={<Dash />} />
                     <Route path="/Inserirdados" element={<Inserirdados />} />
                     <Route path="/InserirALLdados" element={<InserirALLdados />} />

@@ -3,8 +3,6 @@ import { useState, useEffect, useRef } from "react";
 import { getDatabase, ref, get, onValue } from "firebase/database";
 import app from "@/services/firebase";
 import Barra from "@/components/MenuCal";
-import Navibar from "@/components/MenuDashB";
-
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -146,16 +144,9 @@ export default function Dashboard() {
   const lampCardInfo = getStatusCardInfo(lampStatus, "LUZ");
 
   return (
-  <div className="relative min-h-screen bg-[#FFF7E3]">
-    {/* Navbar fixa no topo */}
-    <div className="fixed top-0 left-0 w-full z-50">
-      <Navibar />
-    </div>
-
-    {/* Conteúdo principal com padding-top para não ficar escondido atrás da navbar */}
-    <div className="flex flex-row w-full h-full pt-20 overflow-y-auto">
+    <div className="flex flex-row w-full h-full min-h-screen overflow-y-auto bg-[#FFF7E3] flex flex-col">
+      <div><Barra /></div>
       <div className="bg-[#F5E7C6] lg:mr-60 lg:mb-60 w-full lg:w-350 lg:mt-10 lg:ml-60 p-4">
-        {/* Seus cards e gráficos aqui */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-8">
           <div style={{ backgroundColor: "#FF4C4C" }} className="text-white p-5 shadow-md rounded-md text-center">
             <h2 className="text-lg font-medium">TEMPERATURA</h2>
@@ -192,7 +183,5 @@ export default function Dashboard() {
         </div>
       </div>
     </div>
-  </div>
-);
-
+  );
 }
